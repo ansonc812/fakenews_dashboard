@@ -1,0 +1,618 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\geometry{a4paper, margin=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Capstone Project 3: Dashboard Development},
+    pdfauthor={Anson C},
+    pdfsubject={Fake News Detection Dashboard},
+    pdfkeywords={Dashboard, Fake News, Flask, Data Visualization}
+}
+
+% Code listing style
+\lstset{
+    backgroundcolor=\color{gray!10},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    showstringspaces=false,
+    tabsize=2
+}
+
+% Headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Capstone Project 3}
+\lhead{Anson C}
+\rfoot{\thepage}
+
+\title{
+    \textbf{Capstone Project 3: Dashboard Development} \\
+    \large{Fake News Detection Dashboard} \\
+    \vspace{0.5cm}
+    \normalsize{Interactive Dashboards for Real-time Monitoring and Pattern Analysis}
+}
+\author{Anson C \\ Student ID: [Student ID] \\ \href{mailto:ansonc812@gmail.com}{ansonc812@gmail.com}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Executive Summary}
+
+This report documents the development of two interactive dashboards for fake news detection and analysis as part of Capstone Project 3. The system leverages the FakeNewsNet database established in Capstone Project 2 to provide comprehensive insights into misinformation propagation patterns through real-time monitoring and analytical capabilities.
+
+The project successfully delivers:
+\begin{itemize}
+    \item An operational dashboard for real-time news monitoring and content moderation
+    \item An analytical dashboard for pattern analysis and research insights  
+    \item A robust Flask-based backend with optimised database integration
+    \item Interactive visualisations using Chart.js and D3.js
+    \item Responsive web design supporting multiple device types
+    \item RESTful API architecture for scalable data access
+\end{itemize}
+
+\section{Project Overview}
+
+\subsection{Objectives}
+The primary objective is to create two distinct dashboard types that serve different user communities whilst addressing the critical need for effective fake news detection and analysis tools. The dashboards transform raw data from the FakeNewsNet database into actionable insights through sophisticated visualisation techniques.
+
+\subsection{Target Users}
+\textbf{Operational Dashboard Users:}
+\begin{itemize}
+    \item Content moderators requiring real-time threat identification
+    \item Journalists and fact-checkers needing source verification tools
+    \item Social media platform administrators monitoring viral content
+\end{itemize}
+
+\textbf{Analytical Dashboard Users:}
+\begin{itemize}
+    \item Data scientists researching misinformation patterns
+    \item Policy makers developing content governance strategies
+    \item Academic researchers studying information propagation
+\end{itemize}
+
+\subsection{Technical Requirements}
+\begin{itemize}
+    \item \textbf{Backend:} Flask framework with SQLAlchemy ORM
+    \item \textbf{Database:} PostgreSQL integration from Project 2
+    \item \textbf{Frontend:} HTML5, CSS3, JavaScript with Bootstrap 5
+    \item \textbf{Visualisations:} Chart.js for statistical charts, D3.js for network analysis
+    \item \textbf{Architecture:} RESTful API design with responsive UI
+\end{itemize}
+
+\section{System Architecture}
+
+\subsection{Architecture Overview}
+The system follows a three-tier architecture pattern:
+
+\begin{enumerate}
+    \item \textbf{Presentation Layer:} Responsive web interface with interactive dashboards
+    \item \textbf{Application Layer:} Flask application with business logic and API endpoints
+    \item \textbf{Data Layer:} PostgreSQL database with optimised queries and indexing
+\end{enumerate}
+
+\subsection{Database Integration}
+The application connects to the existing FakeNewsNet database containing 11 interconnected tables:
+
+\begin{longtable}{|p{4cm}|p{6cm}|p{4cm}|}
+\hline
+\textbf{Table} & \textbf{Purpose} & \textbf{Key Relationships} \\
+\hline
+\endhead
+news\_source & Fact-checking sources & One-to-many with articles \\
+news\_article & Main news articles & Central hub table \\
+news\_content & Article text content & One-to-one with articles \\
+news\_category & Article categories & Many-to-many with articles \\
+users & Social media users & One-to-many with tweets \\
+tweet & Social media posts & Links users and articles \\
+retweet & Retweet relationships & Network connectivity \\
+\hline
+\caption{Database Schema Overview}
+\end{longtable}
+
+\subsection{Flask Application Structure}
+\begin{lstlisting}[language=Python, caption=Application Structure]
+app/
+├── __init__.py              # Application factory
+├── models.py                # SQLAlchemy models
+├── database.py              # Database configuration
+├── routes/
+│   ├── operational.py       # Operational dashboard
+│   ├── analytical.py        # Analytical dashboard
+│   └── api.py              # RESTful API endpoints
+├── templates/               # Jinja2 templates
+└── static/                 # CSS, JavaScript, images
+\end{lstlisting}
+
+\section{Dashboard 1: Operational Dashboard}
+
+\subsection{Dashboard Type and Purpose}
+\textbf{Type:} Operational Dashboard \\
+\textbf{Story:} ``Protecting the Digital Information Ecosystem in Real-Time''
+
+This dashboard enables rapid response to emerging misinformation threats through real-time monitoring and immediate threat identification capabilities.
+
+\subsection{Key Features and Visualisations}
+
+\subsubsection{Real-time Viral Content Monitor}
+\begin{itemize}
+    \item Live feed of trending articles with engagement velocity indicators
+    \item Alert system for content exceeding viral thresholds
+    \item Colour-coded labels distinguishing fake from real news
+    \item Interactive engagement score visualisation
+\end{itemize}
+
+\subsubsection{User Influence Heatmap}
+\begin{itemize}
+    \item Ranking of top influencers spreading news content
+    \item Verification status indicators with visual badges
+    \item Follower count and engagement ratio metrics
+    \item Impact score calculation based on reach and activity
+\end{itemize}
+
+\subsubsection{Source Credibility Analysis}
+\begin{itemize}
+    \item Real-time credibility scores with colour-coded ratings
+    \item Bar chart visualisation of fake news percentages by source
+    \item Performance metrics including article counts and reliability trends
+    \item Alert system for low-credibility source detection
+\end{itemize}
+
+\subsubsection{Category Distribution Monitoring}
+\begin{itemize}
+    \item Doughnut chart showing current fake news distribution by category
+    \item Real-time updates with configurable time ranges
+    \item Percentage calculations with trend indicators
+    \item Interactive legends with detailed breakdowns
+\end{itemize}
+
+\subsubsection{Engagement Metrics Table}
+\begin{itemize}
+    \item Sortable and filterable article listing
+    \item Real-time tweet counts and retweet velocity
+    \item Quick action buttons for detailed analysis
+    \item Export functionality for further investigation
+\end{itemize}
+
+\subsection{Interactive Elements}
+\begin{itemize}
+    \item Time range selectors (1 hour to 1 week)
+    \item News type filters (fake/real/all)
+    \item Auto-refresh functionality (30 seconds to 5 minutes)
+    \item Modal popups for detailed article information
+    \item CSV export capabilities for data analysis
+\end{itemize}
+
+\section{Dashboard 2: Analytical Dashboard}
+
+\subsection{Dashboard Type and Purpose}
+\textbf{Type:} Analytical Dashboard \\
+\textbf{Story:} ``Understanding the Anatomy of Misinformation''
+
+This dashboard reveals deeper patterns and trends in fake news propagation, providing insights for strategic decision-making and policy development.
+
+\subsection{Key Features and Visualisations}
+
+\subsubsection{Temporal Trend Analysis}
+\begin{itemize}
+    \item Line chart showing daily trends of fake vs real news
+    \item Time series analysis with seasonal pattern detection
+    \item Comparative analysis tools with percentage calculations
+    \item Predictive trend indicators and growth rate analysis
+\end{itemize}
+
+\subsubsection{Social Network Visualisation}
+\begin{itemize}
+    \item Interactive network graph using D3.js force simulation
+    \item Node sizing based on user influence and reach
+    \item Colour coding for verified status and fake news propagation
+    \item Drag-and-drop interaction with zoom and pan capabilities
+    \item Community detection through visual clustering
+\end{itemize}
+
+\subsubsection{Category Performance Heatmap}
+\begin{itemize}
+    \item Matrix visualisation of categories vs time periods
+    \item Colour intensity representing article volume and engagement
+    \item Interactive tooltips with detailed metrics
+    \item Comparative analysis across different news types
+\end{itemize}
+
+\subsubsection{User Behaviour Analysis}
+\begin{itemize}
+    \item Radar chart comparing verified vs unverified user patterns
+    \item Multi-dimensional analysis of follower counts, engagement, and reach
+    \item Behavioural pattern identification and statistical insights
+    \item Correlation analysis between verification status and news type sharing
+\end{itemize}
+
+\subsubsection{Source Reliability Timeline}
+\begin{itemize}
+    \item Historical performance tracking for news sources
+    \item Multi-line chart showing reliability evolution over time
+    \item Trend analysis with statistical confidence intervals
+    \item Source comparison tools with performance benchmarking
+\end{itemize}
+
+\subsection{Advanced Analytics}
+\begin{itemize}
+    \item Pattern recognition algorithms for anomaly detection
+    \item Statistical analysis with correlation and regression
+    \item Predictive modelling for trend forecasting
+    \item Comparative analysis tools with benchmarking capabilities
+\end{itemize}
+
+\section{Technical Implementation}
+
+\subsection{Backend Development}
+
+\subsubsection{Flask Application Structure}
+\begin{lstlisting}[language=Python, caption=Flask Application Factory]
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    
+    # Initialize extensions
+    db.init_app(app)
+    CORS(app)
+    
+    # Register blueprints
+    app.register_blueprint(operational_bp)
+    app.register_blueprint(analytical_bp)
+    app.register_blueprint(api_bp, url_prefix='/api')
+    
+    return app
+\end{lstlisting}
+
+\subsubsection{Database Models}
+The application implements comprehensive SQLAlchemy models reflecting the database schema with proper relationships and constraints:
+
+\begin{lstlisting}[language=Python, caption=Example Model Definition]
+class NewsArticle(db.Model):
+    __tablename__ = 'news_article'
+    
+    article_id = db.Column(db.Integer, primary_key=True)
+    source_id = db.Column(db.Integer, db.ForeignKey('news_source.source_id'))
+    title = db.Column(db.String(300), nullable=False)
+    label = db.Column(db.String(10), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    source = db.relationship('NewsSource', back_populates='articles')
+    tweets = db.relationship('Tweet', back_populates='article')
+\end{lstlisting}
+
+\subsection{Frontend Development}
+
+\subsubsection{Responsive Design}
+The frontend implements a mobile-first responsive design using Bootstrap 5:
+\begin{itemize}
+    \item Fluid grid system adapting to screen sizes
+    \item Touch-friendly interface elements
+    \item Optimised chart rendering for mobile devices
+    \item Progressive enhancement for advanced features
+\end{itemize}
+
+\subsubsection{Chart.js Implementation}
+Statistical charts leverage Chart.js for interactive visualisations:
+
+\begin{lstlisting}[language=JavaScript, caption=Chart Configuration Example]
+charts.temporalTrends = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Fake News',
+            data: fakeData,
+            borderColor: 'rgb(220, 53, 69)',
+            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false
+        }
+    }
+});
+\end{lstlisting}
+
+\subsubsection{D3.js Network Visualisation}
+Complex network analysis utilises D3.js for advanced interactivity:
+
+\begin{lstlisting}[language=JavaScript, caption=D3.js Force Simulation]
+const simulation = d3.forceSimulation(data.nodes)
+    .force('link', d3.forceLink(data.edges).id(d => d.id))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => d.size + 5));
+\end{lstlisting}
+
+\subsection{API Design}
+The RESTful API provides structured access to dashboard data:
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{8cm}|}
+\hline
+\textbf{Method} & \textbf{Endpoint} & \textbf{Purpose} \\
+\hline
+\endhead
+GET & /api/articles & Paginated article listing with filters \\
+GET & /api/sources & News source information \\
+GET & /operational/viral-content & Real-time viral content detection \\
+GET & /analytical/temporal-trends & Time series data for trend analysis \\
+GET & /analytical/network-analysis & Network graph data \\
+\hline
+\caption{API Endpoints Summary}
+\end{longtable}
+
+\section{Data Visualisation Techniques}
+
+\subsection{Quantitative Visualisations}
+\begin{enumerate}
+    \item \textbf{Line Charts:} Temporal trend analysis with multiple data series
+    \item \textbf{Bar Charts:} Source credibility comparison with colour coding
+    \item \textbf{Doughnut Charts:} Category distribution with interactive legends
+    \item \textbf{Radar Charts:} Multi-dimensional user behaviour analysis
+    \item \textbf{Heatmaps:} Category performance matrix with time correlation
+\end{enumerate}
+
+\subsection{Qualitative Visualisations}
+\begin{enumerate}
+    \item \textbf{Network Graphs:} Social network analysis with force-directed layout
+    \item \textbf{Interactive Tables:} Sortable engagement metrics with quick actions
+    \item \textbf{Card Layouts:} Metric summaries with progressive disclosure
+    \item \textbf{Progress Indicators:} Engagement scores with visual feedback
+    \item \textbf{Status Badges:} Verification indicators and content labels
+\end{enumerate}
+
+\subsection{Interactive Features}
+\begin{itemize}
+    \item Hover tooltips with contextual information
+    \item Click-through navigation to detailed views
+    \item Zoom and pan capabilities for network visualisations
+    \item Filter controls with real-time updates
+    \item Export functionality for data analysis
+\end{itemize}
+
+\section{Performance Optimisation}
+
+\subsection{Database Optimisation}
+\begin{itemize}
+    \item Strategic indexing on frequently queried columns
+    \item Materialised views for complex aggregations
+    \item Query optimisation with proper JOIN strategies
+    \item Connection pooling for improved throughput
+\end{itemize}
+
+\subsection{Frontend Optimisation}
+\begin{itemize}
+    \item Lazy loading for large datasets
+    \item Client-side caching for repeated queries
+    \item Progressive data loading with pagination
+    \item Debounced user interactions
+\end{itemize}
+
+\subsection{Application Architecture}
+\begin{itemize}
+    \item Blueprint-based modular design
+    \item Separation of concerns with dedicated API layer
+    \item Error handling with graceful degradation
+    \item Logging and monitoring integration points
+\end{itemize}
+
+\section{Security Considerations}
+
+\subsection{Data Protection}
+\begin{itemize}
+    \item Environment variables for sensitive configuration
+    \item SQL injection prevention through parameterised queries
+    \item Input validation and sanitisation
+    \item CORS configuration for cross-origin requests
+\end{itemize}
+
+\subsection{Application Security}
+\begin{itemize}
+    \item Secure session management
+    \item Rate limiting considerations for API endpoints
+    \item Error message sanitisation
+    \item Security headers implementation
+\end{itemize}
+
+\section{User Experience Design}
+
+\subsection{Design Principles}
+\begin{itemize}
+    \item \textbf{Clarity:} Clear visual hierarchy with intuitive navigation
+    \item \textbf{Consistency:} Unified design language across dashboards
+    \item \textbf{Efficiency:} Quick access to critical information
+    \item \textbf{Accessibility:} Support for screen readers and keyboard navigation
+\end{itemize}
+
+\subsection{Usability Features}
+\begin{itemize}
+    \item Loading states with progress indicators
+    \item Error handling with user-friendly messages
+    \item Help tooltips and contextual guidance
+    \item Keyboard shortcuts for power users
+\end{itemize}
+
+\subsection{Testing and Validation}
+\begin{itemize}
+    \item Cross-browser compatibility testing
+    \item Mobile device testing across different screen sizes
+    \item Performance testing with sample datasets
+    \item Accessibility validation using automated tools
+\end{itemize}
+
+\section{Results and Analysis}
+
+\subsection{Dashboard Functionality}
+Both dashboards successfully demonstrate:
+\begin{itemize}
+    \item Real-time data processing and visualisation
+    \item Interactive user interface with responsive design
+    \item Comprehensive analytical capabilities
+    \item Export functionality for data analysis
+    \item Performance optimisation for large datasets
+\end{itemize}
+
+\subsection{Technical Achievements}
+\begin{itemize}
+    \item Successful integration with existing PostgreSQL database
+    \item Implementation of complex SQL queries with optimisation
+    \item Advanced visualisation techniques using Chart.js and D3.js
+    \item RESTful API design following best practices
+    \item Responsive web design supporting multiple devices
+\end{itemize}
+
+\subsection{User Experience Validation}
+\begin{itemize}
+    \item Intuitive navigation with minimal learning curve
+    \item Fast response times for data queries and visualisations
+    \item Clear visual distinction between fake and real news
+    \item Effective use of colour coding and visual hierarchy
+    \item Comprehensive filtering and search capabilities
+\end{itemize}
+
+\section{Future Enhancements}
+
+\subsection{Technical Improvements}
+\begin{itemize}
+    \item Real-time WebSocket implementation for live updates
+    \item Machine learning integration for predictive analytics
+    \item Advanced caching layer with Redis
+    \item Microservices architecture for scalability
+\end{itemize}
+
+\subsection{Feature Additions}
+\begin{itemize}
+    \item User authentication and role-based access control
+    \item Email alerts for viral content detection
+    \item Advanced filtering with custom query builder
+    \item Reporting module with scheduled exports
+\end{itemize}
+
+\subsection{Analytics Enhancement}
+\begin{itemize}
+    \item Natural language processing for content analysis
+    \item Sentiment analysis integration
+    \item Automated anomaly detection
+    \item Predictive modelling for trend forecasting
+\end{itemize}
+
+\section{Conclusion}
+
+This project successfully demonstrates the development of sophisticated dashboard applications for fake news detection and analysis. The implementation achieves all specified objectives:
+
+\begin{itemize}
+    \item Two distinct dashboard types serving different user communities
+    \item Comprehensive data visualisation using multiple techniques
+    \item Interactive features enhancing user engagement and analysis
+    \item Robust backend architecture with optimised database integration
+    \item Responsive design supporting diverse device types
+\end{itemize}
+
+The dashboards provide valuable insights into misinformation propagation patterns and support both operational decision-making and strategic research activities. The technical implementation demonstrates advanced web development skills, database optimisation techniques, and user experience design principles.
+
+The project establishes a foundation for future enhancements including machine learning integration, real-time streaming capabilities, and advanced analytics features. The modular architecture and comprehensive documentation facilitate ongoing development and maintenance.
+
+\section{References}
+
+\begin{itemize}
+    \item Flask Documentation. (2024). \textit{Flask Web Development Framework}. Retrieved from \url{https://flask.palletsprojects.com/}
+    \item Chart.js Documentation. (2024). \textit{Chart.js - Open Source HTML5 Charts}. Retrieved from \url{https://www.chartjs.org/}
+    \item D3.js Documentation. (2024). \textit{D3: Data-Driven Documents}. Retrieved from \url{https://d3js.org/}
+    \item Bootstrap Documentation. (2024). \textit{Bootstrap - The World's Most Popular CSS Framework}. Retrieved from \url{https://getbootstrap.com/}
+    \item SQLAlchemy Documentation. (2024). \textit{SQLAlchemy - The Database Toolkit for Python}. Retrieved from \url{https://www.sqlalchemy.org/}
+    \item PostgreSQL Documentation. (2024). \textit{PostgreSQL: The World's Most Advanced Open Source Database}. Retrieved from \url{https://www.postgresql.org/}
+    \item Shu, K., Sliva, A., Wang, S., Tang, J., \& Liu, H. (2017). Fake News Detection on Social Media: A Data Mining Perspective. \textit{ACM SIGKDD Explorations Newsletter}, 19(1), 22-36.
+\end{itemize}
+
+\appendix
+
+\section{Installation Guide}
+\begin{lstlisting}[language=bash, caption=Installation Commands]
+# Clone repository
+git clone https://github.com/ansonc812/fakenews_dashboard.git
+cd fakenews_dashboard
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with database credentials
+
+# Run application
+python app.py
+\end{lstlisting}
+
+\section{SQL Query Examples}
+\begin{lstlisting}[language=SQL, caption=Viral Content Detection Query]
+SELECT 
+    na.article_id,
+    na.title,
+    na.label,
+    COUNT(t.tweet_id) as tweet_count,
+    SUM(t.retweet_count) as total_retweets,
+    (SUM(t.retweet_count) * 2 + 
+     SUM(t.favorite_count) + 
+     COUNT(t.tweet_id) * 0.5) as engagement_score
+FROM news_article na
+JOIN tweet t ON na.article_id = t.article_id
+WHERE t.created_at >= (NOW() - INTERVAL '24 hours')
+GROUP BY na.article_id, na.title, na.label
+ORDER BY total_retweets DESC
+LIMIT 20;
+\end{lstlisting}
+
+\section{API Response Examples}
+\begin{lstlisting}[language=JSON, caption=API Response Format]
+{
+  "articles": [
+    {
+      "article_id": 1,
+      "title": "Example News Article",
+      "url": "https://example.com/article",
+      "label": "fake",
+      "source": "Example Source",
+      "created_at": "2025-01-26T10:00:00Z",
+      "categories": ["politics", "health"]
+    }
+  ],
+  "total": 1250,
+  "pages": 63,
+  "current_page": 1
+}
+\end{lstlisting}
+
+\end{document}
