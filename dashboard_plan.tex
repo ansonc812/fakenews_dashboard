@@ -1,0 +1,235 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\geometry{a4paper, margin=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\title{Capstone Project 3: Dashboard Development Plan\\
+\large Fake News Detection Dashboard}
+\author{Anson C}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Dashboard Requirements Overview}
+
+This document outlines the development plan for two interactive dashboards utilising the FakeNewsNet database established in Capstone Project 2. The dashboards will provide comprehensive insights into fake news propagation patterns and real-time monitoring capabilities.
+
+\section{Target User Personas}
+
+\subsection{Dashboard 1: Operational Dashboard Users}
+\begin{itemize}
+    \item \textbf{Content Moderators}: Social media platform employees responsible for real-time content verification
+    \begin{itemize}
+        \item Demographics: Ages 25-40, technical background
+        \item Needs: Quick identification of viral fake news, user influence metrics
+        \item Technical proficiency: Medium to high
+    \end{itemize}
+    
+    \item \textbf{Journalists and Fact-Checkers}: Media professionals verifying news authenticity
+    \begin{itemize}
+        \item Demographics: Ages 28-55, journalism/communications background
+        \item Needs: Source credibility analysis, trending fake news topics
+        \item Technical proficiency: Medium
+    \end{itemize}
+\end{itemize}
+
+\subsection{Dashboard 2: Analytical Dashboard Users}
+\begin{itemize}
+    \item \textbf{Data Scientists and Researchers}: Academic and industry researchers studying misinformation
+    \begin{itemize}
+        \item Demographics: Ages 25-60, advanced technical background
+        \item Needs: Pattern analysis, temporal trends, network visualisations
+        \item Technical proficiency: High
+    \end{itemize}
+    
+    \item \textbf{Policy Makers}: Government officials and platform executives
+    \begin{itemize}
+        \item Demographics: Ages 35-65, policy/management background
+        \item Needs: High-level insights, category distributions, impact metrics
+        \item Technical proficiency: Low to medium
+    \end{itemize}
+\end{itemize}
+
+\section{Dashboard Types and Storytelling}
+
+\subsection{Dashboard 1: Operational Dashboard for Real-time News Monitoring}
+
+\textbf{Type}: Operational Dashboard
+
+\textbf{Story}: ``Protecting the Digital Information Ecosystem in Real-Time''
+
+This dashboard tells the story of how fake news spreads through social networks in real-time, enabling rapid response to emerging misinformation threats. It focuses on:
+\begin{itemize}
+    \item Current viral content identification
+    \item User influence tracking
+    \item Source credibility monitoring
+    \item Real-time engagement metrics
+\end{itemize}
+
+\subsection{Dashboard 2: Analytical Dashboard for Fake News Pattern Analysis}
+
+\textbf{Type}: Analytical Dashboard
+
+\textbf{Story}: ``Understanding the Anatomy of Misinformation''
+
+This dashboard reveals the deeper patterns and trends in fake news propagation, providing insights for long-term strategy development. It focuses on:
+\begin{itemize}
+    \item Historical trend analysis
+    \item Category-wise distribution patterns
+    \item Social network analysis
+    \item Temporal spread comparisons
+\end{itemize}
+
+\section{Key Metrics and Visualisations}
+
+\subsection{Dashboard 1: Operational Metrics}
+\begin{enumerate}
+    \item \textbf{Real-time Viral Content Monitor}
+    \begin{itemize}
+        \item Live feed of trending articles
+        \item Engagement velocity indicators
+        \item Alert system for rapid spread
+    \end{itemize}
+    
+    \item \textbf{User Influence Heatmap}
+    \begin{itemize}
+        \item Top influencers spreading content
+        \item Verification status indicators
+        \item Follower/engagement ratios
+    \end{itemize}
+    
+    \item \textbf{Source Credibility Dashboard}
+    \begin{itemize}
+        \item Real-time credibility scores
+        \item Source performance metrics
+        \item Alert for low-credibility sources
+    \end{itemize}
+    
+    \item \textbf{Category Distribution (Live)}
+    \begin{itemize}
+        \item Current fake news by category
+        \item Hourly/daily trend indicators
+    \end{itemize}
+    
+    \item \textbf{Engagement Metrics Table}
+    \begin{itemize}
+        \item Sortable/filterable article list
+        \item Tweet counts, retweet velocity
+        \item Quick action buttons
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Dashboard 2: Analytical Metrics}
+\begin{enumerate}
+    \item \textbf{Temporal Trend Analysis}
+    \begin{itemize}
+        \item Time series of fake vs real news
+        \item Seasonal patterns
+        \item Predictive trend lines
+    \end{itemize}
+    
+    \item \textbf{Network Visualisation}
+    \begin{itemize}
+        \item Social network graphs
+        \item Information flow patterns
+        \item Community detection
+    \end{itemize}
+    
+    \item \textbf{Category Performance Matrix}
+    \begin{itemize}
+        \item Heatmap of categories vs credibility
+        \item Comparative analysis
+        \item Statistical insights
+    \end{itemize}
+    
+    \item \textbf{User Behaviour Analysis}
+    \begin{itemize}
+        \item Verified vs unverified user patterns
+        \item Engagement distribution
+        \item Influence correlation charts
+    \end{itemize}
+    
+    \item \textbf{Source Reliability Timeline}
+    \begin{itemize}
+        \item Historical source performance
+        \item Credibility evolution
+        \item Comparative source analysis
+    \end{itemize}
+\end{enumerate}
+
+\section{Technical Implementation Plan}
+
+\subsection{Technology Stack}
+\begin{itemize}
+    \item \textbf{Backend}: Flask (Python), SQLAlchemy ORM
+    \item \textbf{Database}: PostgreSQL (existing from Project 2)
+    \item \textbf{Frontend}: HTML5, CSS3, JavaScript
+    \item \textbf{Visualisation Libraries}: Chart.js, D3.js
+    \item \textbf{CSS Framework}: Bootstrap 5 for responsive design
+\end{itemize}
+
+\subsection{Interactive Elements}
+\begin{itemize}
+    \item Date range selectors
+    \item Category filters (dropdown menus)
+    \item Source selection filters
+    \item Search functionality for articles/users
+    \item Real-time refresh toggles
+    \item Export functionality for data/reports
+\end{itemize}
+
+\section{Performance Considerations}
+
+\begin{enumerate}
+    \item \textbf{Query Optimisation}
+    \begin{itemize}
+        \item Implement database indexing on frequently queried columns
+        \item Use materialised views for complex aggregations
+        \item Implement query caching for static data
+    \end{itemize}
+    
+    \item \textbf{Frontend Optimisation}
+    \begin{itemize}
+        \item Lazy loading for large datasets
+        \item Pagination for tabular data
+        \item Client-side caching for repeated queries
+    \end{itemize}
+    
+    \item \textbf{Real-time Updates}
+    \begin{itemize}
+        \item WebSocket connections for live data
+        \item Polling intervals for semi-real-time updates
+        \item Progressive data loading
+    \end{itemize}
+\end{enumerate}
+
+\section{Deliverables Summary}
+
+\begin{enumerate}
+    \item Two fully functional dashboards (Operational and Analytical)
+    \item Complete source code repository
+    \item SQL queries documentation
+    \item User experience testing results
+    \item Comprehensive project documentation
+\end{enumerate}
+
+\end{document}

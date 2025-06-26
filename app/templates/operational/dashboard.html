@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Operational Dashboard - Fake News Detection{% endblock %}
+
+{% block extra_css %}
+<style>
+    .metric-card {
+        transition: transform 0.2s;
+        height: 100%;
+    }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .fake-label {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .real-label {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .verified-badge {
+        color: #1da1f2;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 30px;
+    }
+    .filter-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .viral-article {
+        border-left: 4px solid #ffc107;
+        padding-left: 15px;
+        margin-bottom: 15px;
+    }
+    .influencer-card {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-tachometer-alt"></i> Operational Dashboard
+            <small class="text-muted">Real-time News Monitoring</small>
+        </h1>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="filter-section">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="timeRange">Time Range:</label>
+            <select id="timeRange" class="form-select">
+                <option value="1">Last Hour</option>
+                <option value="6">Last 6 Hours</option>
+                <option value="24" selected>Last 24 Hours</option>
+                <option value="48">Last 48 Hours</option>
+                <option value="168">Last Week</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="newsType">News Type:</label>
+            <select id="newsType" class="form-select">
+                <option value="">All</option>
+                <option value="fake">Fake News Only</option>
+                <option value="real">Real News Only</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="autoRefresh">Auto Refresh:</label>
+            <select id="autoRefresh" class="form-select">
+                <option value="0">Disabled</option>
+                <option value="30">Every 30 seconds</option>
+                <option value="60">Every minute</option>
+                <option value="300">Every 5 minutes</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button id="refreshBtn" class="btn btn-primary w-100">
+                <i class="fas fa-sync-alt"></i> Refresh Now
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Metrics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Articles</h5>
+                <h2 id="totalArticles">-</h2>
+                <p class="mb-0">In selected time range</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card bg-danger text-white">
+            <div class="card-body">
+                <h5 class="card-title">Fake News</h5>
+                <h2 id="fakeNews">-</h2>
+                <p class="mb-0"><span id="fakePercentage">-</span>% of total</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Real News</h5>
+                <h2 id="realNews">-</h2>
+                <p class="mb-0"><span id="realPercentage">-</span>% of total</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card bg-warning text-white">
+            <div class="card-body">
+                <h5 class="card-title">Viral Alert</h5>
+                <h2 id="viralCount">-</h2>
+                <p class="mb-0">Articles going viral</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Dashboard Content -->
+<div class="row">
+    <!-- Viral Content Monitor -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-fire"></i> Viral Content Monitor
+                </h5>
+            </div>
+            <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                <div id="viralContentList">
+                    <div class="text-center py-4">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Influence Heatmap -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Top Influencers Spreading News
+                </h5>
+            </div>
+            <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                <div id="influencersList">
+                    <div class="text-center py-4">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Source Credibility Dashboard -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-newspaper"></i> Source Credibility Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="sourceCredibilityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Distribution -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie"></i> Category Distribution (Live)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="categoryDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Engagement Metrics Table -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-table"></i> Real-time Engagement Metrics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="engagementTable">
+                        <thead>
+                            <tr>
+                                <th>Article Title</th>
+                                <th>Type</th>
+                                <th>Source</th>
+                                <th>Tweets</th>
+                                <th>Retweets</th>
+                                <th>Engagement Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="engagementTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/operational.js') }}"></script>
+{% endblock %}

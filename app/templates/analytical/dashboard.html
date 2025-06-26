@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Analytical Dashboard - Fake News Detection{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 30px;
+    }
+    .network-container {
+        height: 600px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    .heatmap-container {
+        height: 500px;
+        overflow: auto;
+    }
+    .timeline-controls {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .metric-summary {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .legend-item {
+        display: inline-block;
+        margin-right: 20px;
+    }
+    .legend-color {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        vertical-align: middle;
+        border-radius: 3px;
+    }
+    .node {
+        cursor: pointer;
+    }
+    .link {
+        fill: none;
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+    .node-label {
+        font-size: 12px;
+        pointer-events: none;
+    }
+    .tooltip {
+        position: absolute;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        border-radius: 5px;
+        pointer-events: none;
+        opacity: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-chart-line"></i> Analytical Dashboard
+            <small class="text-muted">Pattern Analysis & Insights</small>
+        </h1>
+    </div>
+</div>
+
+<!-- Timeline Controls -->
+<div class="timeline-controls">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="dateRange">Analysis Period:</label>
+            <select id="dateRange" class="form-select">
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="90">Last 3 Months</option>
+                <option value="180">Last 6 Months</option>
+                <option value="365">Last Year</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="categoryFilter">Category Filter:</label>
+            <select id="categoryFilter" class="form-select">
+                <option value="">All Categories</option>
+                <option value="politics">Politics</option>
+                <option value="health">Health</option>
+                <option value="technology">Technology</option>
+                <option value="entertainment">Entertainment</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="analysisType">Analysis Type:</label>
+            <select id="analysisType" class="form-select">
+                <option value="trends">Temporal Trends</option>
+                <option value="patterns">Spread Patterns</option>
+                <option value="comparative">Comparative Analysis</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button id="updateAnalysis" class="btn btn-primary w-100">
+                <i class="fas fa-chart-bar"></i> Update Analysis
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Metrics -->
+<div class="metric-summary">
+    <div class="row text-center">
+        <div class="col-md-3">
+            <h4 id="totalAnalyzed">-</h4>
+            <p class="mb-0">Articles Analyzed</p>
+        </div>
+        <div class="col-md-3">
+            <h4 id="avgSpreadTime">-</h4>
+            <p class="mb-0">Avg. Spread Time (hours)</p>
+        </div>
+        <div class="col-md-3">
+            <h4 id="verifiedImpact">-</h4>
+            <p class="mb-0">Verified User Impact</p>
+        </div>
+        <div class="col-md-3">
+            <h4 id="fakeNewsGrowth">-</h4>
+            <p class="mb-0">Fake News Growth Rate</p>
+        </div>
+    </div>
+</div>
+
+<!-- Main Analysis Content -->
+<div class="row">
+    <!-- Temporal Trend Analysis -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area"></i> Temporal Trend Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="temporalTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Network Visualization -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-project-diagram"></i> Social Network Analysis
+                </h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="resetNetwork()">
+                        <i class="fas fa-redo"></i> Reset View
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="networkVisualization" class="network-container"></div>
+                <div class="mt-3">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #1da1f2;"></span>
+                        Verified Users
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #657786;"></span>
+                        Unverified Users
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #ff6b6b;"></span>
+                        High Fake News Spreaders
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Category Performance Matrix -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-th"></i> Category Performance Heatmap
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="categoryHeatmap" class="heatmap-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Behavior Analysis -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-chart"></i> User Behavior Patterns
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="userBehaviorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Source Reliability Timeline -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-history"></i> Source Reliability Over Time
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="sourceTimelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Analysis Results -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-microscope"></i> Detailed Analysis Results
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="analysisResults">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Select analysis parameters above to generate detailed insights.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tooltip for D3 visualizations -->
+<div class="tooltip" id="tooltip"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/analytical.js') }}"></script>
+{% endblock %}
