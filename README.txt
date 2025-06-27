@@ -226,7 +226,7 @@ TROUBLESHOOTING
 
 CONTACT INFORMATION
 ==================
-Student: Anson C
+Student: Siu Chun Anson Chan
 Email: ansonc812@gmail.com
 GitHub: https://github.com/ansonc812/fakenews_dashboard
 
