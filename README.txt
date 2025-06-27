@@ -2,7 +2,7 @@ FAKE NEWS DETECTION DASHBOARD
 ==============================
 
 Capstone Project 3: Dashboard Development
-Student: Anson C
+Student: Siu Chun Anson Chan
 Due Date: 25th May 2025
 
 PROJECT OVERVIEW
