@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory, Retweet
+from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory, Retweet, ArticleCategory
 from app.database import db
 from sqlalchemy import func, desc, and_, or_, distinct
 from datetime import datetime, timedelta
@@ -119,7 +119,9 @@ def category_performance():
         func.count(NewsArticle.article_id).label('count'),
         func.avg(Tweet.retweet_count).label('avg_retweets')
     ).join(
-        'categories'
+        ArticleCategory, NewsArticle.article_id == ArticleCategory.article_id
+    ).join(
+        NewsCategory, ArticleCategory.category_id == NewsCategory.category_id
     ).join(
         Tweet, NewsArticle.article_id == Tweet.article_id
     ).filter(
@@ -196,22 +198,24 @@ def source_reliability_timeline():
         NewsSource.source_name,
         func.count(NewsArticle.article_id).label('total'),
         func.sum(func.cast(NewsArticle.label == 'fake', db.Integer)).label('fake_count'),
-        func.avg(func.cast(NewsArticle.label == 'real', db.Float)).label('reliability_score')
+        func.sum(func.cast(NewsArticle.label == 'real', db.Integer)).label('real_count')
     ).join(
         NewsSource, NewsArticle.source_id == NewsSource.source_id
     ).filter(
         NewsArticle.created_at >= start_date
     ).group_by(
         func.date_trunc('month', NewsArticle.created_at),
-        NewsSource.source_id
+        NewsSource.source_id,
+        NewsSource.source_name
     ).having(
-        func.count(NewsArticle.article_id) >= 10  # Only sources with sufficient data
+        func.count(NewsArticle.article_id) >= 5  # Only sources with sufficient data
     ).all()
     
     # Format timeline data
     results = {}
-    for month, source, total, fake, reliability in timeline:
+    for month, source, total, fake, real in timeline:
         month_str = month.strftime('%Y-%m')
+        reliability_score = (real / total * 100) if total > 0 else 0
         if source not in results:
             results[source] = {
                 'source_name': source,
@@ -221,7 +225,7 @@ def source_reliability_timeline():
             'month': month_str,
             'total_articles': total,
             'fake_articles': fake or 0,
-            'reliability_score': float(reliability) * 100 if reliability else 0
+            'reliability_score': reliability_score
         })
     
     return jsonify(list(results.values()))

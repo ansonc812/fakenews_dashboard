@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory
+from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory, ArticleCategory
 from app.database import db
 from sqlalchemy import func, desc
 from datetime import datetime, timedelta
@@ -18,10 +18,11 @@ def operational_dashboard():
 def viral_content():
     # Get time range from query params (default: last 24 hours)
     hours = request.args.get('hours', 24, type=int)
+    label_filter = request.args.get('label', None)  # 'fake', 'real', or None for all
     time_threshold = datetime.utcnow() - timedelta(hours=hours)
     
     # Query for viral content
-    viral_articles = db.session.query(
+    query = db.session.query(
         NewsArticle,
         func.count(Tweet.tweet_id).label('tweet_count'),
         func.sum(Tweet.retweet_count).label('total_retweets'),
@@ -30,7 +31,13 @@ def viral_content():
         Tweet, NewsArticle.article_id == Tweet.article_id
     ).filter(
         Tweet.created_at >= time_threshold
-    ).group_by(
+    )
+    
+    # Add label filter if specified
+    if label_filter:
+        query = query.filter(NewsArticle.label == label_filter)
+    
+    viral_articles = query.group_by(
         NewsArticle.article_id
     ).order_by(
         desc('total_retweets')
@@ -129,11 +136,13 @@ def category_distribution():
         func.count(NewsArticle.article_id).label('total'),
         func.sum(func.cast(NewsArticle.label == 'fake', db.Integer)).label('fake_count')
     ).join(
-        'articles'
+        ArticleCategory, NewsCategory.category_id == ArticleCategory.category_id
+    ).join(
+        NewsArticle, ArticleCategory.article_id == NewsArticle.article_id
     ).filter(
         NewsArticle.created_at >= time_threshold
     ).group_by(
-        NewsCategory.category_id
+        NewsCategory.category_id, NewsCategory.category_name
     ).all()
     
     results = []

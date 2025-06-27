@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory
+from app.models import NewsArticle, NewsSource, User, Tweet, NewsCategory, ArticleCategory
 from app.database import db
 from sqlalchemy import or_, and_, func
 from datetime import datetime
@@ -113,7 +113,7 @@ def get_overview_stats():
         }
     })
 
-@api_bp.route('/articles/<int:article_id>', methods=['GET'])
+@api_bp.route('/articles/<string:article_id>', methods=['GET'])
 def get_article_detail(article_id):
     article = NewsArticle.query.get_or_404(article_id)
     

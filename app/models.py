@@ -15,10 +15,10 @@ class NewsSource(db.Model):
 class NewsArticle(db.Model):
     __tablename__ = 'news_article'
     
-    article_id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.String(50), primary_key=True)
     source_id = db.Column(db.Integer, db.ForeignKey('news_source.source_id'))
-    url = db.Column(db.String(500), nullable=False, unique=True)
-    title = db.Column(db.String(300), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(500), nullable=False)
     label = db.Column(db.String(10), nullable=False)  # 'fake' or 'real'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -34,10 +34,10 @@ class NewsContent(db.Model):
     __tablename__ = 'news_content'
     
     content_id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.Integer, db.ForeignKey('news_article.article_id'), unique=True)
+    article_id = db.Column(db.String(50), db.ForeignKey('news_article.article_id'), unique=True)
     text = db.Column(db.Text)
-    publish_date = db.Column(db.Date)
-    author = db.Column(db.String(100))
+    publish_date = db.Column(db.DateTime)
+    author = db.Column(db.String(255))
     word_count = db.Column(db.Integer)
     
     # Relationships
@@ -47,9 +47,9 @@ class NewsImage(db.Model):
     __tablename__ = 'news_image'
     
     image_id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.Integer, db.ForeignKey('news_article.article_id'))
+    article_id = db.Column(db.String(50), db.ForeignKey('news_article.article_id'))
     image_url = db.Column(db.String(500))
-    caption = db.Column(db.Text)
+    caption = db.Column(db.String(500))
     position = db.Column(db.Integer)
     
     # Relationships
@@ -69,19 +69,18 @@ class NewsCategory(db.Model):
 class ArticleCategory(db.Model):
     __tablename__ = 'article_category'
     
-    article_id = db.Column(db.Integer, db.ForeignKey('news_article.article_id'), primary_key=True)
+    article_id = db.Column(db.String(50), db.ForeignKey('news_article.article_id'), primary_key=True)
     category_id = db.Column(db.Integer, db.ForeignKey('news_category.category_id'), primary_key=True)
 
 class User(db.Model):
     __tablename__ = 'users'
     
     user_id = db.Column(db.BigInteger, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(50))
     display_name = db.Column(db.String(100))
     verified = db.Column(db.Boolean, default=False)
     followers_count = db.Column(db.Integer, default=0)
     following_count = db.Column(db.Integer, default=0)
-    tweets_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime)
     
     # Relationships
@@ -93,9 +92,9 @@ class Tweet(db.Model):
     __tablename__ = 'tweet'
     
     tweet_id = db.Column(db.BigInteger, primary_key=True)
-    article_id = db.Column(db.Integer, db.ForeignKey('news_article.article_id'))
+    article_id = db.Column(db.String(50), db.ForeignKey('news_article.article_id'))
     user_id = db.Column(db.BigInteger, db.ForeignKey('users.user_id'))
-    content = db.Column(db.Text)
+    content = db.Column(db.String(280))
     created_at = db.Column(db.DateTime)
     retweet_count = db.Column(db.Integer, default=0)
     favorite_count = db.Column(db.Integer, default=0)
@@ -108,7 +107,7 @@ class Tweet(db.Model):
 class Retweet(db.Model):
     __tablename__ = 'retweet'
     
-    retweet_id = db.Column(db.Integer, primary_key=True)
+    retweet_id = db.Column(db.BigInteger, primary_key=True)
     tweet_id = db.Column(db.BigInteger, db.ForeignKey('tweet.tweet_id'))
     user_id = db.Column(db.BigInteger, db.ForeignKey('users.user_id'))
     retweeted_at = db.Column(db.DateTime)
@@ -127,9 +126,9 @@ class UserFollower(db.Model):
 class UserTimeline(db.Model):
     __tablename__ = 'user_timeline'
     
-    timeline_id = db.Column(db.Integer, primary_key=True)
+    timeline_id = db.Column(db.BigInteger, primary_key=True)
     user_id = db.Column(db.BigInteger, db.ForeignKey('users.user_id'))
-    tweet_content = db.Column(db.Text)
+    tweet_content = db.Column(db.String(280))
     tweet_date = db.Column(db.DateTime)
     
     # Relationships

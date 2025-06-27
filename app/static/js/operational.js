@@ -7,7 +7,6 @@ let charts = {};
 document.addEventListener('DOMContentLoaded', () => {
     initializeFilters();
     loadDashboardData();
-    setupAutoRefresh();
 });
 
 // Initialize filters and event listeners
@@ -15,21 +14,8 @@ function initializeFilters() {
     document.getElementById('refreshBtn').addEventListener('click', loadDashboardData);
     document.getElementById('timeRange').addEventListener('change', loadDashboardData);
     document.getElementById('newsType').addEventListener('change', loadDashboardData);
-    document.getElementById('autoRefresh').addEventListener('change', setupAutoRefresh);
 }
 
-// Setup auto-refresh
-function setupAutoRefresh() {
-    const interval = parseInt(document.getElementById('autoRefresh').value) * 1000;
-    
-    if (refreshInterval) {
-        clearInterval(refreshInterval);
-    }
-    
-    if (interval > 0) {
-        refreshInterval = setInterval(loadDashboardData, interval);
-    }
-}
 
 // Load all dashboard data
 async function loadDashboardData() {
@@ -40,7 +26,7 @@ async function loadDashboardData() {
         // Load all data in parallel
         const [stats, viralContent, influencers, sources, categories] = await Promise.all([
             apiRequest('/api/stats/overview'),
-            apiRequest(`/operational/viral-content?hours=${hours}`),
+            apiRequest(`/operational/viral-content?hours=${hours}${newsType ? '&label=' + newsType : ''}`),
             apiRequest(`/operational/influencers${newsType ? '?label=' + newsType : ''}`),
             apiRequest('/operational/source-credibility'),
             apiRequest(`/operational/category-distribution?hours=${hours}`)
@@ -171,18 +157,16 @@ function updateSourceCredibility(sources) {
         data: {
             labels: sources.map(s => s.source_name),
             datasets: [{
-                label: 'Fake News %',
-                data: sources.map(s => s.fake_percentage),
-                backgroundColor: sources.map(s => 
-                    s.fake_percentage > 50 ? 'rgba(220, 53, 69, 0.8)' : 
-                    s.fake_percentage > 25 ? 'rgba(255, 193, 7, 0.8)' : 
-                    'rgba(40, 167, 69, 0.8)'
-                ),
-                borderColor: sources.map(s => 
-                    s.fake_percentage > 50 ? 'rgb(220, 53, 69)' : 
-                    s.fake_percentage > 25 ? 'rgb(255, 193, 7)' : 
-                    'rgb(40, 167, 69)'
-                ),
+                label: 'Fake News',
+                data: sources.map(s => s.fake_count),
+                backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                borderColor: 'rgb(220, 53, 69)',
+                borderWidth: 1
+            }, {
+                label: 'Real News',
+                data: sources.map(s => s.real_count),
+                backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                borderColor: 'rgb(40, 167, 69)',
                 borderWidth: 1
             }]
         },

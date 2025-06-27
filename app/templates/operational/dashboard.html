@@ -82,17 +82,9 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label for="autoRefresh">Auto Refresh:</label>
-            <select id="autoRefresh" class="form-select">
-                <option value="0">Disabled</option>
-                <option value="30">Every 30 seconds</option>
-                <option value="60">Every minute</option>
-                <option value="300">Every 5 minutes</option>
-            </select>
-        </div>
-        <div class="col-md-3 d-flex align-items-end">
-            <button id="refreshBtn" class="btn btn-primary w-100">
-                <i class="fas fa-sync-alt"></i> Refresh Now
+            <label for="refreshBtn">Manual Refresh:</label>
+            <button id="refreshBtn" class="btn btn-primary form-control">
+                <i class="fas fa-sync-alt"></i> Refresh Data
             </button>
         </div>
     </div>
@@ -225,7 +217,7 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-hover" id="engagementTable">
                         <thead>
                             <tr>

@@ -25,10 +25,12 @@
         margin-bottom: 30px;
     }
     .metric-summary {
-        background-color: #e9ecef;
+        background-color: #1a1a2e;
+        color: white;
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 20px;
+        border: 1px solid #16213e;
     }
     .legend-item {
         display: inline-block;
@@ -122,7 +124,7 @@
     <div class="row text-center">
         <div class="col-md-3">
             <h4 id="totalAnalyzed">-</h4>
-            <p class="mb-0">Articles Analyzed</p>
+            <p class="mb-0">Articles Analysed</p>
         </div>
         <div class="col-md-3">
             <h4 id="avgSpreadTime">-</h4>
@@ -194,16 +196,18 @@
 </div>
 
 <div class="row mt-4">
-    <!-- Category Performance Matrix -->
+    <!-- Category Distribution Analysis -->
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-th"></i> Category Performance Heatmap
+                    <i class="fas fa-chart-bar"></i> Category Distribution Analysis
                 </h5>
             </div>
             <div class="card-body">
-                <div id="categoryHeatmap" class="heatmap-container"></div>
+                <div class="chart-container">
+                    <canvas id="categoryDistributionChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -213,7 +217,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-user-chart"></i> User Behavior Patterns
+                    <i class="fas fa-user-chart"></i> User Behaviour Patterns
                 </h5>
             </div>
             <div class="card-body">
