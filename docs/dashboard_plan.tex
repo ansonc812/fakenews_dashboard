@@ -1,0 +1,468 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Dashboard Plan}
+\lhead{Fake News Detection System}
+\cfoot{\thepage}
+
+\title{\textbf{Dashboard Plan: Fake News Detection System\\Capstone Project 3}}
+\author{Dashboard Requirements and Design Specification}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Executive Summary}
+
+This document outlines the comprehensive plan for developing two distinct dashboards for the Fake News Detection System: an Operational Dashboard for real-time monitoring and an Analytical Dashboard for in-depth pattern analysis. The dashboards are designed to serve different user needs whilst maintaining a cohesive approach to combating misinformation through data-driven insights.
+
+\section{Dashboard Story and Purpose}
+
+\subsection{The Narrative}
+In an era where misinformation spreads rapidly across social media platforms, there is a critical need for sophisticated monitoring and analysis tools. Our dashboard system tells the story of fake news propagation through two complementary lenses:
+
+\begin{itemize}
+    \item \textbf{Real-time vigilance}: Immediate detection and response to emerging threats
+    \item \textbf{Strategic understanding}: Deep analysis of patterns, behaviours, and trends
+\end{itemize}
+
+The overarching narrative demonstrates how fake news spreads through social networks, the role of verified versus unverified users, and the temporal patterns that characterise misinformation campaigns.
+
+\subsection{Problem Statement}
+Social media platforms face unprecedented challenges in identifying and mitigating fake news. Traditional approaches often rely on post-hoc analysis, missing the critical window for early intervention. Our dashboard system addresses this gap by providing both immediate awareness and strategic insights.
+
+\section{Dashboard Types and Specifications}
+
+\subsection{Dashboard 1: Operational Dashboard}
+\textbf{Type:} Operational\\
+\textbf{Purpose:} Real-time monitoring and immediate threat detection
+
+\subsubsection{Key Characteristics}
+\begin{itemize}
+    \item Real-time data updates with manual refresh capability
+    \item Alert-style visualisations for immediate attention
+    \item Quick decision-making support
+    \item Current status indicators
+    \item Performance monitoring metrics
+\end{itemize}
+
+\subsubsection{Core Functionality}
+\begin{itemize}
+    \item Live article classification monitoring
+    \item Viral content detection and tracking
+    \item Top influencer identification
+    \item Real-time engagement metrics
+    \item Source credibility monitoring
+    \item Geographic distribution analysis
+\end{itemize}
+
+\subsection{Dashboard 2: Analytical Dashboard}
+\textbf{Type:} Analytical\\
+\textbf{Purpose:} Strategic pattern analysis and deep insights
+
+\subsubsection{Key Characteristics}
+\begin{itemize}
+    \item Historical trend analysis
+    \item Complex pattern recognition
+    \item Comparative analysis capabilities
+    \item Deep-dive investigation tools
+    \item Strategic decision support
+\end{itemize}
+
+\subsubsection{Core Functionality}
+\begin{itemize}
+    \item Temporal trend analysis with customisable time ranges
+    \item Social network analysis and visualisation
+    \item User behaviour pattern identification
+    \item Source reliability tracking over time
+    \item Category-based performance analysis
+    \item Dynamic insight generation
+\end{itemize}
+
+\section{Target Users and Demographics}
+
+\subsection{Primary Users}
+
+\subsubsection{Security Analysts}
+\begin{itemize}
+    \item \textbf{Role:} Monitor and respond to emerging threats
+    \item \textbf{Needs:} Real-time alerts, quick threat assessment, immediate response capabilities
+    \item \textbf{Primary Dashboard:} Operational
+    \item \textbf{Technical Level:} High
+    \item \textbf{Decision Speed:} Immediate to short-term
+\end{itemize}
+
+\subsubsection{Research Scientists}
+\begin{itemize}
+    \item \textbf{Role:} Study misinformation patterns and develop countermeasures
+    \item \textbf{Needs:} Historical data, pattern analysis, comparative studies
+    \item \textbf{Primary Dashboard:} Analytical
+    \item \textbf{Technical Level:} Very High
+    \item \textbf{Decision Speed:} Long-term strategic
+\end{itemize}
+
+\subsubsection{Content Moderation Teams}
+\begin{itemize}
+    \item \textbf{Role:} Review and moderate content based on risk assessments
+    \item \textbf{Needs:} Source reliability, user behaviour insights, content categorisation
+    \item \textbf{Primary Dashboard:} Both (context-dependent)
+    \item \textbf{Technical Level:} Medium
+    \item \textbf{Decision Speed:} Short to medium-term
+\end{itemize}
+
+\subsection{Secondary Users}
+
+\subsubsection{Platform Executives}
+\begin{itemize}
+    \item \textbf{Role:} Strategic oversight and policy development
+    \item \textbf{Needs:} High-level trends, performance metrics, compliance reporting
+    \item \textbf{Primary Dashboard:} Analytical
+    \item \textbf{Technical Level:} Medium
+    \item \textbf{Decision Speed:} Strategic
+\end{itemize}
+
+\section{Key Metrics and Data Insights}
+
+\subsection{Critical Performance Indicators}
+
+\subsubsection{Volume Metrics}
+\begin{itemize}
+    \item Total articles processed per time period
+    \item Fake vs. real news distribution ratios
+    \item User engagement levels (tweets, retweets, favourites)
+    \item Geographic spread patterns
+\end{itemize}
+
+\subsubsection{Quality Metrics}
+\begin{itemize}
+    \item Source reliability scores over time
+    \item Verified user participation rates
+    \item Content categorisation accuracy
+    \item Network influence measurements
+\end{itemize}
+
+\subsubsection{Temporal Metrics}
+\begin{itemize}
+    \item Average spread time for different content types
+    \item Peak activity periods and seasonal patterns
+    \item Growth rates and trend directions
+    \item Response time to emerging threats
+\end{itemize}
+
+\section{Visualisation Strategy}
+
+\subsection{Quantitative Techniques (4+ Required)}
+\begin{enumerate}
+    \item \textbf{Time Series Line Charts:} Temporal trends and growth patterns
+    \item \textbf{Bar Charts:} Category comparisons and user behaviour metrics
+    \item \textbf{Geographic Heat Maps:} Spatial distribution of content
+    \item \textbf{Network Graphs:} Social connection analysis using D3.js
+    \item \textbf{Gauge Charts:} Real-time performance indicators
+    \item \textbf{Scatter Plots:} Correlation analysis between variables
+\end{enumerate}
+
+\subsection{Qualitative Techniques (3+ Required)}
+\begin{enumerate}
+    \item \textbf{Colour Coding:} Semantic representation (red for fake, green for real)
+    \item \textbf{Interactive Tooltips:} Contextual information on hover
+    \item \textbf{Dynamic Text Analysis:} Automated insight generation based on data
+    \item \textbf{Icon-based Indicators:} Visual status representation
+    \item \textbf{Progressive Disclosure:} Layered information presentation
+\end{enumerate}
+
+\subsection{Chart Selection Rationale}
+
+\subsubsection{Operational Dashboard}
+\begin{itemize}
+    \item \textbf{Real-time Gauges:} Immediate status comprehension
+    \item \textbf{Geographic Maps:} Spatial threat awareness
+    \item \textbf{Bar Charts:} Quick comparison of current metrics
+    \item \textbf{List Views:} Actionable item identification
+\end{itemize}
+
+\subsubsection{Analytical Dashboard}
+\begin{itemize}
+    \item \textbf{Line Charts:} Trend analysis over extended periods
+    \item \textbf{Network Graphs:} Complex relationship visualisation
+    \item \textbf{Grouped Bar Charts:} Multi-dimensional comparisons
+    \item \textbf{Timeline Charts:} Historical pattern recognition
+\end{itemize}
+
+\section{Technical Architecture}
+
+\subsection{Technology Stack}
+\begin{itemize}
+    \item \textbf{Backend:} Flask (Python) with SQLAlchemy ORM
+    \item \textbf{Database:} PostgreSQL with optimised queries
+    \item \textbf{Frontend:} HTML5, CSS3, JavaScript (ES6+)
+    \item \textbf{Visualisation Libraries:} Chart.js, D3.js
+    \item \textbf{Styling:} Bootstrap 5 for responsive design
+\end{itemize}
+
+\subsection{Performance Considerations}
+\begin{itemize}
+    \item Efficient database indexing for real-time queries
+    \item Client-side caching for improved responsiveness
+    \item Asynchronous data loading to prevent UI blocking
+    \item Optimised SQL queries with appropriate aggregations
+\end{itemize}
+
+\section{Interactive Features}
+
+\subsection{Filtering Capabilities}
+\begin{itemize}
+    \item \textbf{Temporal Filters:} Date ranges, time periods
+    \item \textbf{Category Filters:} News categories, content types
+    \item \textbf{User Filters:} Verified status, influence levels
+    \item \textbf{Geographic Filters:} Regional and country-based selection
+\end{itemize}
+
+\subsection{Dynamic Elements}
+\begin{itemize}
+    \item \textbf{Real-time Updates:} Manual refresh for current data
+    \item \textbf{Interactive Charts:} Click-through navigation and drill-down
+    \item \textbf{Contextual Tooltips:} Detailed information on demand
+    \item \textbf{Responsive Layout:} Adaptive design for various screen sizes
+\end{itemize}
+
+\section{Success Criteria}
+
+\subsection{Functional Requirements}
+\begin{itemize}
+    \item All visualisations display accurate, real-time data
+    \item Filters function correctly and update charts dynamically
+    \item Dashboard loads efficiently (< 3 seconds initial load)
+    \item All interactive elements respond appropriately
+\end{itemize}
+
+\subsection{User Experience Requirements}
+\begin{itemize}
+    \item Intuitive navigation requiring minimal training
+    \item Clear visual hierarchy and information organisation
+    \item Accessible design meeting WCAG guidelines
+    \item Consistent behaviour across different browsers
+\end{itemize}
+
+\subsection{Performance Requirements}
+\begin{itemize}
+    \item Support for concurrent users without degradation
+    \item Efficient database queries executing within 500ms
+    \item Responsive design functioning on mobile devices
+    \item Minimal false positive/negative rates in classifications
+\end{itemize}
+
+\section{Implementation Timeline}
+
+\subsection{Project Schedule Overview}
+The implementation follows a structured approach with clearly defined phases and deliverables. The project commenced on 8th May 2025 and spans approximately 30 working days, concluding on 27th June 2025, allowing for thorough development, testing, and documentation.
+
+\subsection{Gantt Chart - Project Implementation Schedule}
+
+\textbf{Project Timeline Summary:}
+\begin{itemize}
+    \item \textbf{Phase 1 (8-14 May):} Foundation - Database \& API Development
+    \item \textbf{Phase 2 (15-26 May):} Core Features - Statistics, Classification, Detection, Analysis
+    \item \textbf{Phase 3 (27 May-3 June):} Analytics - Trends, Networks, User Behaviour
+    \item \textbf{Phase 4 (13-19 June):} Dashboard Implementation - Operational \& Analytical
+    \item \textbf{Phase 5 (27 June):} Finalisation - Documentation \& Delivery
+\end{itemize}
+
+\begin{center}
+\small
+\begin{tabular}{|l|p{15cm}|}
+\hline
+\textbf{Phase} & \textbf{Timeline Visualization} \\
+\hline
+\textbf{Foundation} & 
+\begin{minipage}{15cm}
+\textbf{8-14 May 2025:} Database Integration (8-12 May) XXX | Backend API (12-14 May) XX
+\end{minipage} \\
+\hline
+\textbf{Core Features} & 
+\begin{minipage}{15cm}
+\textbf{15-26 May 2025:} Statistics (15-16) XX | Classification (19-20) XX | Detection (21-22) XX | Analysis (23-26) XX
+\end{minipage} \\
+\hline
+\textbf{Analytics} & 
+\begin{minipage}{15cm}
+\textbf{27 May-3 June 2025:} Temporal Trends (27-28 May) XX | Network Analysis (29-30 May) XX | User Behaviour (2-3 June) XX
+\end{minipage} \\
+\hline
+\textbf{Dashboards} & 
+\begin{minipage}{15cm}
+\textbf{13-19 June 2025:} Operational Dashboard (13-17 June) XXXXX | Analytical Dashboard (18-19 June) XX
+\end{minipage} \\
+\hline
+\textbf{Finalisation} & 
+\begin{minipage}{15cm}
+\textbf{27 June 2025:} Documentation Report \& Project Delivery X
+\end{minipage} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Detailed Task Breakdown}
+
+\subsubsection{Phase 1: Foundation (8-14 May 2025)}
+\begin{itemize}
+    \item \textbf{8-12 May: Database Integration}
+    \begin{itemize}
+        \item PostgreSQL connection setup
+        \item SQLAlchemy ORM configuration
+        \item Database schema validation
+        \item Performance indexing implementation
+    \end{itemize}
+    \item \textbf{12-14 May: Backend API Development}
+    \begin{itemize}
+        \item Flask application structure
+        \item Blueprint architecture implementation
+        \item Core API endpoints development
+        \item Database query optimisation
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Phase 2: Core Features (15-26 May 2025)}
+\begin{itemize}
+    \item \textbf{15-16 May: Real-time Statistics}
+    \begin{itemize}
+        \item Overview statistics calculation
+        \item User verification metrics
+        \item Performance monitoring setup
+    \end{itemize}
+    \item \textbf{19-20 May: Article Classification}
+    \begin{itemize}
+        \item Recent articles feed implementation
+        \item Classification filtering system
+        \item Real-time content monitoring
+    \end{itemize}
+    \item \textbf{21-22 May: Viral Content Detection}
+    \begin{itemize}
+        \item Engagement velocity algorithms
+        \item Viral scoring implementation
+        \item Alert system development
+    \end{itemize}
+    \item \textbf{23-26 May: Source Analysis}
+    \begin{itemize}
+        \item Source reliability calculation
+        \item Credibility scoring system
+        \item Historical tracking implementation
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Phase 3: Analytics Features (27 May - 3 June 2025)}
+\begin{itemize}
+    \item \textbf{27-28 May: Temporal Trends}
+    \begin{itemize}
+        \item Time series data processing
+        \item Growth rate calculations
+        \item Trend analysis algorithms
+    \end{itemize}
+    \item \textbf{29-30 May: Network Analysis}
+    \begin{itemize}
+        \item Social network mapping
+        \item Centrality calculations
+        \item D3.js visualisation setup
+    \end{itemize}
+    \item \textbf{2-3 June: User Behaviour Patterns}
+    \begin{itemize}
+        \item Verified vs. unverified analysis
+        \item Engagement pattern identification
+        \item Behaviour comparison metrics
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Phase 4: Dashboard Implementation (13-19 June 2025)}
+\begin{itemize}
+    \item \textbf{13-17 June: Operational Dashboard}
+    \begin{itemize}
+        \item Real-time interface development
+        \item Chart.js integration
+        \item Interactive filtering system
+        \item Performance optimisation
+        \item User testing and feedback integration
+    \end{itemize}
+    \item \textbf{18-19 June: Analytical Dashboard}
+    \begin{itemize}
+        \item Advanced analytics interface
+        \item D3.js network visualisations
+        \item Dynamic analysis results
+        \item User experience refinement
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Phase 5: Finalisation (27 June 2025)}
+\begin{itemize}
+    \item \textbf{27 June: Documentation Report}
+    \begin{itemize}
+        \item Development process documentation
+        \item Technical implementation summary
+        \item User guide creation
+        \item Final testing and validation
+        \item Project delivery preparation
+    \end{itemize}
+\end{itemize}
+
+\subsection{Critical Path Analysis}
+The critical path for this project includes:
+\begin{enumerate}
+    \item Database Integration → Backend API Development
+    \item Core Features Development → Analytics Features
+    \item Dashboard Implementation → Documentation
+\end{enumerate}
+
+\subsection{Risk Mitigation Timeline}
+\begin{itemize}
+    \item \textbf{Buffer Days:} Each phase includes half-day buffers for unexpected issues
+    \item \textbf{Parallel Development:} Some features can be developed concurrently
+    \item \textbf{Incremental Testing:} Testing integrated throughout development phases
+    \item \textbf{Early Integration:} Database and API tested early to avoid late-stage issues
+\end{itemize}
+
+\subsection{Deliverable Schedule}
+\begin{itemize}
+    \item \textbf{14 May 2025:} Backend API functional
+    \item \textbf{26 May 2025:} Core features operational
+    \item \textbf{3 June 2025:} Analytics features complete
+    \item \textbf{17 June 2025:} Operational dashboard deployed
+    \item \textbf{19 June 2025:} Analytical dashboard deployed
+    \item \textbf{27 June 2025:} Complete documentation delivered
+\end{itemize}
+
+\section{Risk Mitigation}
+
+\subsection{Technical Risks}
+\begin{itemize}
+    \item \textbf{Database Performance:} Implement query optimisation and indexing
+    \item \textbf{Real-time Updates:} Design efficient polling mechanisms
+    \item \textbf{Scalability:} Plan for horizontal scaling capabilities
+\end{itemize}
+
+\subsection{User Adoption Risks}
+\begin{itemize}
+    \item \textbf{Complexity:} Provide comprehensive user documentation
+    \item \textbf{Training:} Develop user guides and tutorials
+    \item \textbf{Feedback Integration:} Establish continuous improvement processes
+\end{itemize}
+
+\section{Conclusion}
+
+This dashboard plan establishes a comprehensive framework for developing sophisticated fake news detection and analysis tools. By combining real-time operational capabilities with deep analytical insights, the system will provide users with the tools necessary to combat misinformation effectively. The differentiated approach ensures that both immediate response needs and strategic planning requirements are met through purpose-built interfaces optimised for their respective use cases.
+
+The success of this implementation will be measured not only by technical performance but by the system's ability to enhance decision-making capabilities and improve the overall response to misinformation threats in digital environments.
+
+\end{document}

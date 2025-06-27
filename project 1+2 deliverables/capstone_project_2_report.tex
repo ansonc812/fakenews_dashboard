@@ -1,0 +1,451 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\geometry{margin=1in}
+
+% SQL syntax highlighting - clean style without red boxes
+\lstset{
+    language=SQL,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{black},
+    commentstyle=\color{gray},
+    showstringspaces=false,
+    breaklines=true,
+    frame=none,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    backgroundcolor=\color{white}
+}
+
+\title{Capstone Project 2\\
+\large FakeNewsNet Database Design and Implementation}
+\author{Siu Chun Anson Chan\\62006049}
+\date{May 10, 2025}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduction}
+
+This report presents the data modelling and database implementation for the FakeNewsNet dataset based on the dataset collected in Capstone Project 1. The project involves designing a comprehensive database schema to efficiently store and query fake news data, including news articles, social media interactions, and user information.
+
+\chapter{Step 1: Understanding the Dataset}
+
+\section{Dataset Summary}
+
+The FakeNewsNet dataset consists of news articles and their associated social media data collected from two fact-checking sources: PolitiFact and GossipCop. The dataset structure includes:
+
+\subsection{Main Data Components}
+\begin{itemize}
+    \item \textbf{News Articles}: Contains news content with unique IDs, URLs, titles, and labels (fake/real)
+    \item \textbf{News Sources}: PolitiFact and GossipCop as fact-checking sources
+    \item \textbf{Tweets}: Social media posts sharing the news articles
+    \item \textbf{Users}: Twitter users who posted tweets about the news
+    \item \textbf{Retweets}: Reshares of original tweets
+    \item \textbf{User Relationships}: Follower/following connections
+    \item \textbf{User Timelines}: Historical tweets from users
+    \item \textbf{News Content}: Full article text, images, and publication dates
+\end{itemize}
+
+\subsection{Data Attributes}
+\begin{itemize}
+    \item News: id, url, title, text, publish\_date, label (fake/real)
+    \item Tweet: tweet\_id, user\_id, content, timestamp
+    \item User: user\_id, username, profile\_data, follower\_count
+    \item Relationships: Multi-dimensional social network data
+\end{itemize}
+
+\subsection{Database Type Selection}
+A \textbf{Relational Database Management System (RDBMS)} is chosen for this project because:
+\begin{itemize}
+    \item The data has clear relationships (news-tweets, tweets-users, users-followers)
+    \item Need for ACID compliance and data integrity
+    \item Complex queries involving multiple joins
+    \item Well-defined schema with structured data
+\end{itemize}
+
+\chapter{Step 2: Conceptual Data Modelling}
+
+\section{Entity Identification}
+
+Based on the dataset analysis, we identify the following key entities:
+
+\begin{enumerate}
+    \item \textbf{NewsSource}: Fact-checking sources (PolitiFact, GossipCop)
+    \item \textbf{NewsArticle}: Individual news articles
+    \item \textbf{NewsContent}: Detailed content of news articles
+    \item \textbf{NewsImage}: Images associated with news articles
+    \item \textbf{Tweet}: Social media posts about news
+    \item \textbf{User}: Twitter users
+    \item \textbf{Retweet}: Retweet relationships
+    \item \textbf{UserFollower}: Follower relationships between users
+    \item \textbf{UserTimeline}: Historical tweets from users
+    \item \textbf{NewsCategory}: Categories/topics of news articles
+\end{enumerate}
+
+\section{Relationships}
+
+\begin{itemize}
+    \item NewsSource (1) --- publishes --- (M) NewsArticle
+    \item NewsArticle (1) --- has --- (1) NewsContent
+    \item NewsArticle (1) --- contains --- (M) NewsImage
+    \item NewsArticle (1) --- shared\_by --- (M) Tweet
+    \item User (1) --- posts --- (M) Tweet
+    \item Tweet (1) --- has --- (M) Retweet
+    \item User (1) --- retweets --- (M) Retweet
+    \item User (M) --- follows --- (M) User (UserFollower)
+    \item User (1) --- has --- (M) UserTimeline
+    \item NewsArticle (M) --- belongs\_to --- (M) NewsCategory
+\end{itemize}
+
+\section{Model Suitability}
+
+This conceptual model is suitable for the FakeNewsNet case study because:
+\begin{itemize}
+    \item It captures all dimensions of fake news data (content, social context, temporal aspects)
+    \item Supports tracking of information dissemination through social networks
+    \item Enables analysis of user behaviour patterns
+    \item Maintains data integrity through proper relationship definitions
+    \item Allows for complex queries about news credibility and social impact
+\end{itemize}
+
+\chapter{Step 3: Logical Data Modelling}
+
+\section{Entity Attributes and Data Types}
+
+\subsection{NewsSource}
+\begin{itemize}
+    \item source\_id (INT) - Primary Key
+    \item source\_name (VARCHAR(50)) - Not Null, Unique
+    \item source\_url (VARCHAR(255))
+    \item credibility\_rating (DECIMAL(3,2))
+\end{itemize}
+
+\subsection{NewsArticle}
+\begin{itemize}
+    \item article\_id (VARCHAR(50)) - Primary Key
+    \item source\_id (INT) - Foreign Key
+    \item url (VARCHAR(500)) - Not Null
+    \item title (VARCHAR(500)) - Not Null
+    \item label (ENUM('fake', 'real')) - Not Null
+    \item created\_at (TIMESTAMP)
+\end{itemize}
+
+\subsection{NewsContent}
+\begin{itemize}
+    \item content\_id (INT) - Primary Key, Auto Increment
+    \item article\_id (VARCHAR(50)) - Foreign Key, Unique
+    \item text (TEXT)
+    \item publish\_date (DATETIME)
+    \item author (VARCHAR(255))
+    \item word\_count (INT)
+\end{itemize}
+
+\section{Normalisation to 3NF}
+
+The logical model is normalised to Third Normal Form (3NF):
+
+\begin{enumerate}
+    \item \textbf{1NF}: All attributes contain atomic values, no repeating groups
+    \item \textbf{2NF}: All non-key attributes are fully functionally dependent on the primary key
+    \item \textbf{3NF}: No transitive dependencies exist
+\end{enumerate}
+
+\chapter{Step 4: Physical Data Modelling \& Database Schema}
+
+\section{DBMS Selection}
+
+PostgreSQL is selected as the DBMS for the following reasons:
+\begin{itemize}
+    \item Excellent support for complex queries and joins
+    \item JSONB data type for semi-structured data
+    \item Full-text search capabilities
+    \item Open-source with strong community support
+    \item Scalability for large datasets
+\end{itemize}
+
+\section{Physical ERD Design}
+
+The physical ERD extends the logical model with implementation-specific details for PostgreSQL:
+
+\begin{itemize}
+    \item \textbf{Storage Parameters}: HEAP storage with optimised FILLFACTOR settings
+    \item \textbf{Indexing Strategy}: B-tree indexes for primary keys, GIN indexes for full-text search
+    \item \textbf{Partitioning}: Date-based partitioning for high-volume tables (tweet, retweet)
+    \item \textbf{Performance Optimisation}: Composite indexes for common query patterns
+    \item \textbf{Constraint Implementation}: CHECK constraints, foreign key constraints, and unique constraints
+\end{itemize}
+
+Key physical design decisions:
+\begin{itemize}
+    \item Tweet table partitioned by creation date for scalability
+    \item Full-text search indexes on article titles and content
+    \item Optimised follower relationship queries through strategic indexing
+    \item Memory-efficient storage for large text fields using TOAST
+\end{itemize}
+
+\section{SQL Scripts for Table Creation}
+
+\begin{lstlisting}[caption={Database and Initial Setup}]
+-- Create database
+CREATE DATABASE fakenewsnet_db;
+
+-- Create ENUM type for news labels
+CREATE TYPE news_label AS ENUM ('fake', 'real');
+\end{lstlisting}
+
+\begin{lstlisting}[caption={NewsSource Table}]
+CREATE TABLE news_source (
+    source_id SERIAL PRIMARY KEY,
+    source_name VARCHAR(50) NOT NULL UNIQUE,
+    source_url VARCHAR(255),
+    credibility_rating DECIMAL(3,2) 
+        CHECK (credibility_rating >= 0 AND credibility_rating <= 1)
+);
+\end{lstlisting}
+
+\begin{lstlisting}[caption={NewsArticle Table}]
+CREATE TABLE news_article (
+    article_id VARCHAR(50) PRIMARY KEY,
+    source_id INTEGER NOT NULL,
+    url VARCHAR(500) NOT NULL,
+    title VARCHAR(500) NOT NULL,
+    label news_label NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (source_id) REFERENCES news_source(source_id)
+);
+
+-- Create indexes for faster queries
+CREATE INDEX idx_news_article_source ON news_article(source_id);
+CREATE INDEX idx_news_article_label ON news_article(label);
+\end{lstlisting}
+
+\chapter{Step 5: Querying the Database}
+
+\section{Easy Queries}
+
+\subsection{Query 1: Total Tweets by News Label}
+\begin{lstlisting}[caption={Easy Query 1}]
+-- Get the total number of tweets for fake vs real news articles
+SELECT 
+    na.label,
+    COUNT(t.tweet_id) as total_tweets,
+    AVG(t.retweet_count) as avg_retweets
+FROM news_article na
+INNER JOIN tweet t ON na.article_id = t.article_id
+GROUP BY na.label
+ORDER BY total_tweets DESC;
+\end{lstlisting}
+
+\textbf{Step-by-step Explanation}:
+\begin{enumerate}
+    \item \textbf{SELECT clause}: Selects the news label, counts total tweets, and calculates average retweets
+    \item \textbf{FROM clause}: Starts with the news\_article table as the main data source
+    \item \textbf{INNER JOIN}: Joins with the tweet table to connect articles with their associated tweets
+    \item \textbf{GROUP BY}: Groups results by news label (fake/real) to aggregate data for each category
+    \item \textbf{ORDER BY}: Sorts results by total tweet count in descending order
+\end{enumerate}
+This query helps understand engagement patterns between different news types by analysing tweet volume and retweet behaviour.
+
+\subsection{Query 2: User Activity Summary}
+\begin{lstlisting}[caption={Easy Query 2}]
+-- Get user activity summary showing tweet counts
+SELECT 
+    u.username,
+    u.verified,
+    COUNT(t.tweet_id) as tweet_count,
+    SUM(t.retweet_count) as total_retweets_received
+FROM users u
+INNER JOIN tweet t ON u.user_id = t.user_id
+WHERE u.followers_count > 1000
+GROUP BY u.user_id, u.username, u.verified
+ORDER BY tweet_count DESC
+LIMIT 10;
+\end{lstlisting}
+
+\textbf{Step-by-step Explanation}:
+\begin{enumerate}
+    \item \textbf{SELECT clause}: Selects username, verification status, tweet count, and total retweets received
+    \item \textbf{FROM clause}: Starts with the users table to get user information
+    \item \textbf{INNER JOIN}: Joins with tweet table to connect users with their tweets
+    \item \textbf{WHERE clause}: Filters to include only users with more than 1000 followers
+    \item \textbf{GROUP BY}: Groups by user attributes to aggregate tweet statistics per user
+    \item \textbf{ORDER BY}: Sorts by tweet count in descending order to find most active users
+    \item \textbf{LIMIT}: Restricts results to top 10 most active users
+\end{enumerate}
+This query identifies influential users based on follower count and activity level.
+
+\section{Medium Queries}
+
+\subsection{Query 3: News Source Performance Analysis}
+\begin{lstlisting}[caption={Medium Query 1}]
+-- Analyze news source performance with category breakdown
+SELECT 
+    ns.source_name,
+    nc.category_name,
+    na.label,
+    COUNT(DISTINCT na.article_id) as article_count,
+    COUNT(DISTINCT t.tweet_id) as total_tweets,
+    UPPER(SUBSTRING(na.title, 1, 50)) || '...' as sample_title
+FROM news_source ns
+INNER JOIN news_article na ON ns.source_id = na.source_id
+INNER JOIN article_category ac ON na.article_id = ac.article_id
+INNER JOIN news_category nc ON ac.category_id = nc.category_id
+LEFT JOIN tweet t ON na.article_id = t.article_id
+WHERE na.created_at >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY ns.source_name, nc.category_name, na.label, na.title
+ORDER BY total_tweets DESC;
+\end{lstlisting}
+
+\textbf{Step-by-step Explanation}:
+\begin{enumerate}
+    \item \textbf{SELECT clause}: Selects source name, category, label, article count, tweet count, and sample title
+    \item \textbf{FROM clause}: Starts with news\_source table as the primary data source
+    \item \textbf{INNER JOIN news\_article}: Connects sources with their published articles
+    \item \textbf{INNER JOIN article\_category}: Links articles to their categories through junction table
+    \item \textbf{INNER JOIN news\_category}: Connects to category names and details
+    \item \textbf{LEFT JOIN tweet}: Includes tweet data where available (left join allows articles without tweets)
+    \item \textbf{WHERE clause}: Filters to articles created within the last 30 days
+    \item \textbf{GROUP BY}: Groups by source, category, label, and title to aggregate statistics
+    \item \textbf{ORDER BY}: Sorts by total tweets in descending order to show most engaging content first
+\end{enumerate}
+This query provides comprehensive performance analysis of news sources across different categories and time periods.
+
+\section{Difficult Query}
+
+\subsection{Query 5: Comprehensive Fake News Network Analysis}
+\begin{lstlisting}[caption={Difficult Query}]
+-- Complex analysis of fake news dissemination networks
+WITH user_influence AS (
+    SELECT 
+        u.user_id,
+        u.username,
+        u.verified,
+        COUNT(DISTINCT t.tweet_id) as tweet_count,
+        RANK() OVER (ORDER BY u.followers_count * 
+                     COUNT(DISTINCT t.tweet_id) DESC) as influence_rank
+    FROM users u
+    INNER JOIN tweet t ON u.user_id = t.user_id
+    GROUP BY u.user_id, u.username, u.verified, u.followers_count
+)
+SELECT 
+    ui.username as top_influencer,
+    ui.verified as influencer_verified,
+    ui.influence_rank,
+    na.title,
+    na.label,
+    COUNT(DISTINCT t.tweet_id) as tweet_count
+FROM user_influence ui
+INNER JOIN tweet t ON ui.user_id = t.user_id
+INNER JOIN news_article na ON t.article_id = na.article_id
+WHERE ui.influence_rank <= 100
+  AND na.label = 'fake'
+GROUP BY ui.username, ui.verified, ui.influence_rank, na.title, na.label
+ORDER BY ui.influence_rank
+LIMIT 25;
+\end{lstlisting}
+
+\textbf{Step-by-step Explanation}:
+\begin{enumerate}
+    \item \textbf{CTE (WITH clause)}: Creates a Common Table Expression called user\_influence to pre-calculate user influence metrics
+    \item \textbf{CTE SELECT}: Calculates user influence based on followers count multiplied by tweet activity
+    \item \textbf{RANK() function}: Assigns influence rankings using a window function ordered by the influence metric
+    \item \textbf{Main SELECT}: Selects top influencer details, article information, and engagement metrics
+    \item \textbf{Multiple JOINs}: Connects user influence data with tweets and news articles
+    \item \textbf{WHERE clause}: Filters to top 100 influencers AND only fake news articles
+    \item \textbf{GROUP BY}: Groups results by user and article to aggregate tweet counts
+    \item \textbf{ORDER BY}: Sorts by influence rank to show most influential users first
+    \item \textbf{LIMIT}: Restricts to top 25 results for manageable output
+\end{enumerate}
+This complex query identifies the most influential users spreading fake news by combining user metrics, social network analysis, and content classification. It demonstrates advanced SQL techniques including CTEs, window functions, and multi-table joins.
+
+\chapter{Step 6: Database Implementation and Data Insertion}
+
+\section{Sample Data Implementation}
+
+The database implementation includes comprehensive sample data insertion demonstrating:
+
+\begin{itemize}
+    \item \textbf{News Sources}: PolitiFact, GossipCop, and Snopes with credibility ratings
+    \item \textbf{News Categories}: Politics, Health, Technology, and Entertainment classifications
+    \item \textbf{News Articles}: Mixed fake and real articles with proper labelling
+    \item \textbf{User Profiles}: Verified and unverified users with realistic follower counts
+    \item \textbf{Social Interactions}: Tweets, retweets, and follower relationships
+    \item \textbf{Content Relationships}: Article-category associations and user timelines
+\end{itemize}
+
+\section{Data Verification and Testing}
+
+Sample queries verify data integrity and relationship correctness:
+\begin{itemize}
+    \item Foreign key constraint validation across all tables
+    \item Data type conformance and constraint adherence
+    \item Relationship cardinality verification
+    \item Index performance testing for common query patterns
+\end{itemize}
+
+The implementation demonstrates successful data insertion with proper referential integrity maintenance and constraint enforcement throughout the database schema.
+
+\chapter{Conclusion}
+
+This project successfully designed and implemented a comprehensive database schema for the FakeNewsNet dataset. The complete deliverables include:
+
+\section{Database Design Accomplishments}
+
+\begin{itemize}
+    \item \textbf{Conceptual ERD}: 10 entities with proper relationships and cardinalities
+    \item \textbf{Logical ERD}: Normalised to 3NF with complete attribute specifications
+    \item \textbf{Physical ERD}: PostgreSQL-specific implementation with performance optimisations
+    \item \textbf{SQL Implementation}: Complete table creation scripts with constraints and indexes
+\end{itemize}
+
+\section{Query Implementation}
+
+The project delivers 8 comprehensive SQL queries including:
+\begin{itemize}
+    \item 2 Easy queries demonstrating basic aggregation and filtering
+    \item 2 Medium queries showcasing complex joins and analytical functions
+    \item 1 Difficult query utilising CTEs, window functions, and advanced SQL features
+    \item 3 Additional queries for comprehensive database demonstration
+\end{itemize}
+
+\section{Technical Achievements}
+
+The database design:
+\begin{itemize}
+    \item Efficiently stores multi-dimensional fake news data across 11 related tables
+    \item Supports complex queries for analysing news dissemination patterns
+    \item Maintains referential integrity through comprehensive constraint implementation
+    \item Provides optimised access patterns through strategic indexing
+    \item Enables advanced analytics on social media engagement and user behaviour
+    \item Implements physical optimisations including partitioning and full-text search
+\end{itemize}
+
+\section{Project Impact}
+
+The implemented database system demonstrates capability to:
+\begin{itemize}
+    \item Track fake news propagation through social networks
+    \item Analyse user influence patterns and verification status
+    \item Support real-time monitoring of news article engagement
+    \item Enable research into misinformation spread dynamics
+    \item Facilitate fact-checking organisation collaboration
+\end{itemize}
+
+The project provides a robust foundation for fake news research and detection systems, with scalable architecture supporting both analytical and operational workloads.
+
+\end{document}

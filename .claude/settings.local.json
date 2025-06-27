@@ -7,7 +7,14 @@
       "Bash(git commit:*)",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(python3 -m pip:*)",
+      "Bash(unzip:*)",
+      "Bash(psql:*)",
+      "Bash(python3:*)",
+      "Bash(find:*)",
+      "Bash(pdflatex:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
